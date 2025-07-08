@@ -101,6 +101,10 @@
 .badge.bg-info { background-color: var(--badge-info-bg) !important; }
 .badge.bg-danger { background-color: var(--badge-danger-bg) !important; }
 
+.text-muted {
+  color: var(--text-muted-color) !important;
+}
+
 /* UI Improvements */
 
 
@@ -117,4 +121,9 @@
   min-height: 200px;
   max-height: calc(100vh - 250px); /* Adjust based on your header/footer height */
   overflow-y: auto;
+}
+
+pre, textarea {
+  background-color: var(--response-bg) !important;
+  color: var(--response-text-color) !important;
 }
