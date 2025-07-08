@@ -37,6 +37,19 @@ const useRequestData = () => {
 
     historyData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
+    collectionsData.sort((a, b) => {
+      const aOrder = a.order ?? Infinity;
+      const bOrder = b.order ?? Infinity;
+
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+
+      const aTime = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+      const bTime = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      return bTime - aTime; // descending
+    });
+
     setHistory(historyData);
     setCollections(collectionsData);
     setGlobalHeaders(globalHeadersData.map(h => ({ ...h, enabled: h.enabled !== false })));
@@ -247,6 +260,23 @@ const useRequestData = () => {
     }
   };
 
+  const updateCollectionsOrder = useCallback(async (reorderedCollections: CollectionItem[]) => {
+    const db = await dbPromise;
+    const tx = db.transaction('collections', 'readwrite');
+    const store = tx.objectStore('collections');
+
+    const updatedItems = reorderedCollections.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+
+    await Promise.all(updatedItems.map(item => store.put(item)));
+    await tx.done;
+
+    setCollections(updatedItems);
+    console.log("Collections order updated in DB.");
+  }, [loadData]);
+
   return {
     name, setName, method, setMethod, url, setUrl, body, setBody, headers, setHeaders,
     queryParams, setQueryParams, globalHeaders, setGlobalHeaders, responseStatus,
@@ -257,7 +287,8 @@ const useRequestData = () => {
     editingCollectionName, setEditingCollectionName,
     loadData, updateGlobalHeadersInDb, sendRequest, saveToCollection, loadRequest,
     deleteHistoryItem, deleteCollectionItem, startEditingCollectionName, cancelEditingCollectionName,
-    saveCollectionName
+    saveCollectionName,
+    updateCollectionsOrder
   };
 };
 

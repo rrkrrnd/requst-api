@@ -79,8 +79,22 @@ function App() {
     editingCollectionName, setEditingCollectionName,
     loadData, updateGlobalHeadersInDb, sendRequest, saveToCollection, loadRequest,
     deleteHistoryItem, deleteCollectionItem, startEditingCollectionName, cancelEditingCollectionName,
-    saveCollectionName
+    saveCollectionName,
+    updateCollectionsOrder
   } = useRequestData();
+
+  const [historyFilter, setHistoryFilter] = useState<string>('');
+  const [collectionFilter, setCollectionFilter] = useState<string>('');
+
+  const filteredHistory = history.filter(item =>
+    (item.name && item.name.toLowerCase().includes(historyFilter.toLowerCase())) ||
+    item.url.toLowerCase().includes(historyFilter.toLowerCase())
+  );
+
+  const filteredCollections = collections.filter(item =>
+    (item.name && item.name.toLowerCase().includes(collectionFilter.toLowerCase())) ||
+    item.url.toLowerCase().includes(collectionFilter.toLowerCase())
+  );
 
   useEffect(() => {
     const loadInitialTheme = async () => {
@@ -117,7 +131,9 @@ function App() {
           </ul>
           <div className="tab-content overflow-auto flex-grow-1">
             <HistoryPanel 
-              history={history}
+              history={filteredHistory}
+              filter={historyFilter}
+              setFilter={setHistoryFilter}
               loadRequest={loadRequest}
               saveToCollection={saveToCollection}
               deleteHistoryItem={deleteHistoryItem}
@@ -125,7 +141,9 @@ function App() {
               formatTimestamp={formatTimestamp}
             />
             <CollectionsPanel
-              collections={collections}
+              collections={filteredCollections}
+              filter={collectionFilter}
+              setFilter={setCollectionFilter}
               editingCollectionId={editingCollectionId}
               editingCollectionName={editingCollectionName}
               setEditingCollectionName={setEditingCollectionName}
@@ -135,6 +153,7 @@ function App() {
               startEditingCollectionName={startEditingCollectionName}
               deleteCollectionItem={deleteCollectionItem}
               getMethodColor={getMethodColor}
+              updateCollectionsOrder={updateCollectionsOrder}
             />
           </div>
         </div>

@@ -19,6 +19,8 @@ export interface CollectionItem {
   headers?: HeaderItem[];
   queryParams?: QueryParamsItem[];
   bearerToken?: string;
+  order?: number;
+  timestamp?: Date;
 }
 
 export interface HeaderItem {

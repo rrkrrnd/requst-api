@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CollectionItem } from '../types';
-import { getMethodColor } from '../utils/helpers';
 
 interface CollectionsPanelProps {
   collections: CollectionItem[];
+  filter: string;
+  setFilter: (filter: string) => void;
   editingCollectionId: number | null;
   editingCollectionName: string;
   setEditingCollectionName: (name: string) => void;
@@ -13,10 +14,13 @@ interface CollectionsPanelProps {
   startEditingCollectionName: (item: CollectionItem) => void;
   deleteCollectionItem: (id: number) => void;
   getMethodColor: (method: string) => string;
+  updateCollectionsOrder: (reorderedCollections: CollectionItem[]) => void;
 }
 
 const CollectionsPanel = ({
   collections,
+  filter,
+  setFilter,
   editingCollectionId,
   editingCollectionName,
   setEditingCollectionName,
@@ -26,12 +30,62 @@ const CollectionsPanel = ({
   startEditingCollectionName,
   deleteCollectionItem,
   getMethodColor,
+  updateCollectionsOrder,
 }: CollectionsPanelProps) => {
+  const [dragId, setDragId] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent<HTMLLIElement>, id: number) => {
+    e.dataTransfer.setData('text/plain', String(id));
+    setDragId(id);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLLIElement>, dropId: number) => {
+    e.preventDefault();
+    const draggedId = Number(e.dataTransfer.getData('text/plain'));
+    if (draggedId === dropId) {
+      setDragId(null);
+      return;
+    }
+
+    const reordered = [...collections];
+    const draggedIndex = reordered.findIndex(item => item.id === draggedId);
+    const dropIndex = reordered.findIndex(item => item.id === dropId);
+
+    if (draggedIndex === -1 || dropIndex === -1) return;
+
+    const [draggedItem] = reordered.splice(draggedIndex, 1);
+    reordered.splice(dropIndex, 0, draggedItem);
+
+    updateCollectionsOrder(reordered);
+    setDragId(null);
+  };
+
   return (
     <div className="tab-pane fade h-100" id="collections" role="tabpanel">
+      <div className="p-2">
+        <input
+          type="text"
+          className="form-control form-control-sm"
+          placeholder="Filter by name or URL"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </div>
       <ul className="list-group list-group-flush">
         {collections.map((item) => (
-          <li key={item.id} className="list-group-item list-group-item-action" style={{cursor: 'pointer'}}>
+          <li 
+            key={item.id}
+            draggable
+            onDragStart={(e) => handleDragStart(e, item.id as number)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, item.id as number)}
+            className={`list-group-item list-group-item-action ${dragId === item.id ? 'dragging' : ''}`}
+            style={{cursor: 'grab'}}
+          >
             {editingCollectionId === item.id ? (
               <div className="d-flex align-items-center">
                 <input 
@@ -47,7 +101,7 @@ const CollectionsPanel = ({
               </div>
             ) : (
               <div className="d-flex w-100 justify-content-between align-items-center">
-                  <div className="flex-grow-1 d-flex align-items-center" onClick={() => loadRequest(item)}>
+                  <div className="flex-grow-1 d-flex align-items-center" onClick={() => loadRequest(item)} style={{cursor: 'pointer'}}>
                       <span className={`badge bg-${getMethodColor(item.method)} me-2`}>{item.method}</span>
                       <span>{item.name}</span>
                       <button className="btn btn-link btn-sm p-0 ms-2" onClick={(e) => { e.stopPropagation(); startEditingCollectionName(item); }}>
