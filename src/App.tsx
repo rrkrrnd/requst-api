@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Header from './components/Header';
+import { useCallback, useEffect, useState } from 'react';
 import './App.scss';
+import Header from './components/Header';
 
-import SettingsModal from './components/SettingsModal';
-import HistoryPanel from './components/HistoryPanel';
 import CollectionsPanel from './components/CollectionsPanel';
+import HistoryPanel from './components/HistoryPanel';
 import RequestPanel from './components/RequestPanel';
 import ResponsePanel from './components/ResponsePanel';
+import SettingsModal from './components/SettingsModal';
 
 import useRequestData from './hooks/useRequestData';
 
-import { getMethodColor, formatTimestamp } from './utils/helpers';
 import { openDB } from 'idb';
-import { themes, ThemeColors } from './utils/themes';
+import { formatTimestamp, getMethodColor } from './utils/helpers';
+import { ThemeColors, themes } from './utils/themes';
 
 
 
@@ -76,11 +76,9 @@ function App() {
     setResponseStatus, responseStatusText, setResponseStatusText, responseHeaders,
     setResponseHeaders, responseBody, setResponseBody, history, setHistory,
     collections, setCollections, isLoading, setIsLoading, bearerToken, setBearerToken,
-    responseTime, setResponseTime, editingCollectionId, setEditingCollectionId,
-    editingCollectionName, setEditingCollectionName,
+    responseTime, setResponseTime,
     loadData, updateGlobalHeadersInDb, sendRequest, saveToCollection, loadRequest,
-    deleteHistoryItem, deleteCollectionItem, startEditingCollectionName, cancelEditingCollectionName,
-    saveCollectionName,
+    deleteHistoryItem, deleteCollectionItem,
     createCollectionGroup,
     saveCollectionsLayout
   } = useRequestData();
@@ -121,8 +119,8 @@ function App() {
     <div className="container-fluid vh-100 d-flex flex-column p-3">
       <Header setShowSettingsModal={setShowSettingsModal} />
 
-      <div className="row flex-grow-1" style={{ minHeight: 0 }}>
-        <div className="col-2 border-end d-flex flex-column">
+      <div className="d-flex flex-grow-1 flex-nowrap" style={{ minHeight: 0 }}>
+        <div className="col-2 border-end d-flex flex-column me-3" style={{ minWidth: '350px' }}>
           <ul className="nav nav-tabs" role="tablist">
             <li className="nav-item" role="presentation">
               <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">History</button>
@@ -146,13 +144,7 @@ function App() {
               collections={filteredCollections}
               filter={collectionFilter}
               setFilter={setCollectionFilter}
-              editingCollectionId={editingCollectionId}
-              editingCollectionName={editingCollectionName}
-              setEditingCollectionName={setEditingCollectionName}
-              saveCollectionName={saveCollectionName}
-              cancelEditingCollectionName={cancelEditingCollectionName}
               loadRequest={loadRequest}
-              startEditingCollectionName={startEditingCollectionName}
               deleteCollectionItem={deleteCollectionItem}
               getMethodColor={getMethodColor}
               createCollectionGroup={createCollectionGroup}
@@ -161,7 +153,7 @@ function App() {
           </div>
         </div>
 
-        <div className="col-10 d-flex flex-column">
+        <div className="d-flex flex-column flex-grow-1" style={{ minWidth: '600px' }}>
           <div className="input-group mb-3">
             <select className="form-select flex-grow-0" style={{width: '100px'}} value={method} onChange={(e) => setMethod(e.target.value)}>
               <option>GET</option> <option>POST</option> <option>PUT</option> <option>DELETE</option>
@@ -174,7 +166,7 @@ function App() {
             <input type="text" className="form-control" placeholder="My API Request" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
 
-          <div className="row flex-grow-1 request-panels" style={{ minHeight: 0 }}>
+          <div className="d-flex flex-grow-1 flex-nowrap request-panels" style={{ minHeight: 0, overflowX: 'auto' }}>
             <RequestPanel
               method={method}
               setMethod={setMethod}
@@ -195,6 +187,7 @@ function App() {
               updateGlobalHeadersInDb={updateGlobalHeadersInDb}
               bearerToken={bearerToken}
               setBearerToken={setBearerToken}
+              style={{ minWidth: '300px', flexShrink: 0, marginRight: '2rem' }}
             />
             <ResponsePanel
               isLoading={isLoading}
@@ -203,6 +196,7 @@ function App() {
               responseTime={responseTime}
               responseHeaders={responseHeaders}
               responseBody={responseBody}
+              style={{ minWidth: '300px', flexShrink: 0 }}
             />
           </div>
         </div>

@@ -1,6 +1,4 @@
-import React from 'react';
 import { HistoryItem } from '../types';
-import { getMethodColor, formatTimestamp } from '../utils/helpers';
 
 interface HistoryPanelProps {
   history: HistoryItem[];
@@ -45,7 +43,7 @@ const HistoryPanel = ({
                     </div>
                     <div className="text-muted small mt-1">{formatTimestamp(item.timestamp)}</div>
                 </div>
-                <div>
+                <div style={{ minWidth: '61px' }}>
                     <button className="btn btn-sm btn-outline-primary py-0 px-1 me-1" title="Save to Collections" onClick={(e) => { e.stopPropagation(); saveToCollection(item); }}>Save</button>
                     <button className="btn btn-sm btn-outline-danger py-0 px-1" onClick={(e) => { e.stopPropagation(); deleteHistoryItem(item.id as number); }}>X</button>
                 </div>

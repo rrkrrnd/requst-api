@@ -22,6 +22,7 @@ interface RequestPanelProps {
   updateGlobalHeadersInDb: (headers: HeaderItem[]) => void;
   bearerToken: string;
   setBearerToken: (token: string) => void;
+  style?: React.CSSProperties;
 }
 
 const RequestPanel = ({

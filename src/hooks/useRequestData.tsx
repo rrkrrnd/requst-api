@@ -277,19 +277,41 @@ const useRequestData = () => {
     loadData();
   };
 
-  const saveCollectionsLayout = useCallback(async (newLayout: CollectionItem[]) => {
+  const saveCollectionsLayout = useCallback(async (updatedCollections: CollectionItem[]) => {
     const db = await dbPromise;
     const tx = db.transaction('collections', 'readwrite');
     const store = tx.objectStore('collections');
-    
-    const itemsToSave = newLayout.map((item, index) => ({ ...item, order: index }));
+
+    const childrenMap = new Map<number | null, CollectionItem[]>();
+    updatedCollections.forEach(item => {
+      const parentId = item.parentId === undefined ? null : item.parentId;
+      if (!childrenMap.has(parentId)) {
+        childrenMap.set(parentId, []);
+      }
+      childrenMap.get(parentId)?.push(item);
+    });
+
+    const itemsToSave: CollectionItem[] = [];
+
+    const assignOrder = (items: CollectionItem[], parentId: number | null) => {
+      items.forEach((item, index) => {
+        const newItem = { ...item, order: index, parentId: parentId };
+        itemsToSave.push(newItem);
+        if (item.type === 'group' && item.id !== undefined && childrenMap.has(item.id)) {
+          assignOrder(childrenMap.get(item.id)!, item.id);
+        }
+      });
+    };
+
+    const topLevelItems = childrenMap.get(null) || [];
+    assignOrder(topLevelItems, null);
 
     await Promise.all(itemsToSave.map(item => store.put(item)));
     await tx.done;
 
-    setCollections(itemsToSave);
-    console.log("Collections layout updated in DB.");
-  }, []);
+    loadData();
+    console.log("Collections layout updated in DB and reloaded.");
+  }, [loadData]);
 
   return {
     name, setName, method, setMethod, url, setUrl, body, setBody, headers, setHeaders,

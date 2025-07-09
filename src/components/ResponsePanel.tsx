@@ -7,6 +7,7 @@ interface ResponsePanelProps {
   responseTime: number | null;
   responseHeaders: any;
   responseBody: any;
+  style?: React.CSSProperties;
 }
 
 const ResponsePanel = ({
