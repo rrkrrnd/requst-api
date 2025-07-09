@@ -1,6 +1,7 @@
 import React from 'react';
 import { HeaderItem, QueryParamsItem } from '../types';
 import KeyValueInput from './KeyValueInput';
+import { formatJson } from '../utils/helpers';
 
 interface RequestPanelProps {
   method: string;
@@ -45,9 +46,15 @@ const RequestPanel = ({
   updateGlobalHeadersInDb,
   bearerToken,
   setBearerToken,
+  style
 }: RequestPanelProps) => {
+
+  const handleFormatBody = () => {
+    setBody(formatJson(body));
+  };
+
   return (
-    <div className="col-5 d-flex flex-column">
+    <div className="col-5 d-flex flex-column" style={style}>
       <ul className="nav nav-tabs" role="tablist">
           <li className="nav-item" role="presentation">
               <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#body-content" type="button" role="tab">Body</button>
@@ -67,7 +74,8 @@ const RequestPanel = ({
       </ul>
       <div className="tab-content flex-grow-1 overflow-auto p-2 border-top-0 border h-100">
           <div className="tab-pane fade show active h-100" id="body-content" role="tabpanel">
-              <textarea className="form-control h-100" placeholder='{ "key": "value" }' value={body} onChange={(e) => setBody(e.target.value)} style={{minHeight: '150px'}}></textarea>
+              <button className="btn btn-sm btn-primary mt-2" onClick={handleFormatBody}>Format JSON</button>
+              <textarea className="form-control h-100" placeholder='{ "key": "value" }' value={body} onChange={(e) => setBody(e.target.value)} style={{minHeight: '100px'}}></textarea>
           </div>
           <div className="tab-pane fade h-100" id="headers-content" role="tabpanel">
               <KeyValueInput items={headers} setItems={setHeaders} />

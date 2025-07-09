@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { dbPromise } from '../utils/db';
-import { UNSAFE_HEADERS } from '../utils/helpers';
+import { UNSAFE_HEADERS, formatJson } from '../utils/helpers';
 import { HistoryItem, CollectionItem, HeaderItem, QueryParamsItem } from '../types';
 
 const useRequestData = () => {
@@ -118,7 +118,8 @@ const useRequestData = () => {
 
       if (body && (method === 'POST' || method === 'PUT')) {
         try {
-          config.data = JSON.parse(body);
+          const formattedBody = formatJson(body);
+          config.data = JSON.parse(formattedBody);
           console.log("Parsed config.data for POST/PUT:", config.data); // Debugging
         } catch (e: any) {
           console.error("Error parsing JSON body:", e); // More specific error log

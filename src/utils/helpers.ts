@@ -27,3 +27,13 @@ export const formatTimestamp = (timestamp: Date): string => {
   const ss = String(date.getSeconds()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
 };
+
+export const formatJson = (jsonString: string): string => {
+  try {
+    const parsed = JSON.parse(jsonString);
+    return JSON.stringify(parsed, null, 2);
+  } catch (e) {
+    console.error("Invalid JSON for formatting:", e);
+    return jsonString; // Return original string if invalid
+  }
+};
