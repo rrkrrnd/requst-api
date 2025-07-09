@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# Requst Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[한국어](README.ko.md) | [Français](README.fr.md) | [简体中文](README.zh.md) | [日本語](README.ja.md) | [Español](README.es.md) | [العربية](README.ar.md) | [Tiếng Việt](README.vi.md) | [ภาษาไทย](README.th.md)
 
-## Available Scripts
+Requst Client is a powerful and intuitive web-based tool that allows you to send API requests, view responses, manage request history, and save them as collections.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### 1. Request and Response Handling
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Request Creation**: Create API requests by selecting an HTTP method (GET, POST, PUT, DELETE, etc.) and entering the request URL.
+- **Request Body**: Supports JSON formatted request bodies, with a convenient JSON formatting feature.
+- **Header Management**: Add, edit, enable/disable request headers as key-value pairs.
+- **Authentication**: Supports Bearer Token authentication.
+- **Query Parameters**: Easily manage and enable/disable query parameters as key-value pairs.
+- **Global Headers**: Set and manage global headers that are automatically applied to all requests.
+- **Response Viewing**: Clearly displays response status code, status text, response time, headers, and body for your requests. The response body is automatically converted to JSON format for improved readability.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Data Management and Organization
 
-### `npm test`
+- **Collections**: Save and manage frequently used requests as collections.
+- **Grouping**: Organize requests systematically by grouping them within collections.
+- **Drag and Drop**: Easily reorder requests and groups within collections using drag and drop.
+- **Filtering**: Quickly search for requests in collections and history by name or URL.
+- **History**: Automatically saves a record of all sent requests, allowing you to easily reload previous requests or save them to collections.
+- **Data Export/Import**: Export or import all your request history, collections, global headers, and UI settings as a JSON file, making it easy to back up and restore your data.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. User Interface and Settings
 
-### `npm run build`
+- **Intuitive UI**: Provides a clean and easy-to-use interface to streamline the API testing process.
+- **Themes**: Personalize your user experience by choosing from various UI themes.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 1. Project Setup and Running
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To run the project in your local environment, follow these steps:
 
-### `npm run eject`
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/requst-client.git
+cd requst-client
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# 2. Install dependencies
+npm install
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 3. Run the application
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The application will run at `http://localhost:3000` (or another available port).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 2. Sending API Requests
 
-## Learn More
+1.  **Enter URL and Method**: In the "Request" panel, enter the URL of the API you want to request and select the HTTP method (GET, POST, etc.) from the dropdown menu.
+2.  **Configure Request Details**:
+    - **Body**: For POST, PUT requests, enter the JSON formatted request body in the "Body" tab. Click the "Format JSON" button to format the body for better readability.
+    - **Headers**: In the "Headers" tab, add necessary request headers as key-value pairs.
+    - **Auth**: In the "Auth" tab, enter the Bearer Token.
+    - **Query**: In the "Query" tab, add URL query parameters as key-value pairs.
+    - **Global Headers**: In the "Global Headers" tab, set global headers that will be applied to all requests.
+3.  **Send Request**: Click the "Send" button to send the API request.
+4.  **View Response**: Check the response (status, time, headers, body) for your request in the "Response" panel.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. Managing Collections and History
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Collections**: In the "Collections" tab, you can save new requests, or edit, delete, and group existing ones. You can reorder them using drag and drop.
+- **History**: In the "History" tab, view a list of previously sent requests, click to reload them into the request panel, or save them to collections.
 
-### Code Splitting
+### 4. Changing Settings
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Click the gear icon at the top of the application to open the "Settings" modal.
+- **Themes**: Select your desired UI theme from the "Select Theme" dropdown.
+- **Data Management**: In the "Data Management" section, click "Export Data" to back up all your data, or "Import Data" to restore previously backed up data.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
