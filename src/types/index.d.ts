@@ -13,14 +13,16 @@ export interface HistoryItem {
 export interface CollectionItem {
   id?: number;
   name: string;
-  method: string;
-  url: string;
+  method?: string;
+  url?: string;
   body?: string;
   headers?: HeaderItem[];
   queryParams?: QueryParamsItem[];
   bearerToken?: string;
   order?: number;
   timestamp?: Date;
+  type: 'group' | 'request';
+  parentId?: number | null;
 }
 
 export interface HeaderItem {

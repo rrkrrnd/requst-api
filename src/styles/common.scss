@@ -127,3 +127,45 @@ pre, textarea {
   background-color: var(--response-bg) !important;
   color: var(--response-text-color) !important;
 }
+
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--text-muted-color);
+  opacity: 0.7;
+}
+
+.form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: var(--text-muted-color);
+  opacity: 0.7;
+}
+
+.form-control::-ms-input-placeholder { /* Microsoft Edge */
+  color: var(--text-muted-color);
+  opacity: 0.7;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.transition-transform {
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Modal Styles */
+.modal-content {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+.modal-footer {
+  border-top-color: var(--border-color);
+}
+
+.btn-close {
+  filter: invert(var(--filter-invert-value, 0)); /* Adjusts close button color based on theme */
+}

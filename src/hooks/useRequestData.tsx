@@ -38,9 +38,14 @@ const useRequestData = () => {
     historyData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     collectionsData.sort((a, b) => {
+      // Sort top-level items: groups first, then requests
+      if (!a.parentId && !b.parentId) {
+        if (a.type === 'group' && b.type === 'request') return -1;
+        if (a.type === 'request' && b.type === 'group') return 1;
+      }
+
       const aOrder = a.order ?? Infinity;
       const bOrder = b.order ?? Infinity;
-
       if (aOrder !== bOrder) {
         return aOrder - bOrder;
       }
@@ -192,7 +197,7 @@ const useRequestData = () => {
 
     // Create a new object for the collection, ensuring the old 'id' from history is not carried over.
     const { id, ...requestData } = request; 
-    const newCollectionItem: CollectionItem = { ...requestData, name: newName };
+    const newCollectionItem: CollectionItem = { ...requestData, name: newName, type: 'request', parentId: null };
 
     await db.add('collections', newCollectionItem);
     console.log("Collection item added to DB:", newCollectionItem);
@@ -205,8 +210,8 @@ const useRequestData = () => {
 
   const loadRequest = (request: HistoryItem | CollectionItem) => {
     setName(request.name || '');
-    setMethod(request.method);
-    setUrl(request.url);
+    setMethod(request.method || 'GET');
+    setUrl(request.url || '');
     setBody(request.body || '');
     setHeaders(Array.isArray(request.headers) && request.headers.length > 0 
       ? request.headers.map(h => ({ ...h, enabled: h.enabled !== false }))
@@ -260,22 +265,31 @@ const useRequestData = () => {
     }
   };
 
-  const updateCollectionsOrder = useCallback(async (reorderedCollections: CollectionItem[]) => {
+  const createCollectionGroup = async (name: string) => {
+    const db = await dbPromise;
+    const newGroup: CollectionItem = {
+      name,
+      type: 'group',
+      timestamp: new Date(),
+      order: collections.filter(c => c.type === 'group' && !c.parentId).length
+    };
+    await db.add('collections', newGroup);
+    loadData();
+  };
+
+  const saveCollectionsLayout = useCallback(async (newLayout: CollectionItem[]) => {
     const db = await dbPromise;
     const tx = db.transaction('collections', 'readwrite');
     const store = tx.objectStore('collections');
+    
+    const itemsToSave = newLayout.map((item, index) => ({ ...item, order: index }));
 
-    const updatedItems = reorderedCollections.map((item, index) => ({
-      ...item,
-      order: index,
-    }));
-
-    await Promise.all(updatedItems.map(item => store.put(item)));
+    await Promise.all(itemsToSave.map(item => store.put(item)));
     await tx.done;
 
-    setCollections(updatedItems);
-    console.log("Collections order updated in DB.");
-  }, [loadData]);
+    setCollections(itemsToSave);
+    console.log("Collections layout updated in DB.");
+  }, []);
 
   return {
     name, setName, method, setMethod, url, setUrl, body, setBody, headers, setHeaders,
@@ -288,7 +302,8 @@ const useRequestData = () => {
     loadData, updateGlobalHeadersInDb, sendRequest, saveToCollection, loadRequest,
     deleteHistoryItem, deleteCollectionItem, startEditingCollectionName, cancelEditingCollectionName,
     saveCollectionName,
-    updateCollectionsOrder
+    createCollectionGroup,
+    saveCollectionsLayout
   };
 };
 

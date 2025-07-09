@@ -62,6 +62,7 @@ function App() {
       '--badge-info-bg': colors.info,
       '--badge-danger-bg': colors.danger,
       '--text-muted-color': colors.secondary, // Using secondary color for muted text
+      '--filter-invert-value': colors.background === '#0a192f' || colors.background === '#282a36' || colors.background === '#282828' || colors.background === '#1E1E1E' ? '1' : '0',
     };
 
     for (const [key, value] of Object.entries(derivedColors)) {
@@ -80,7 +81,8 @@ function App() {
     loadData, updateGlobalHeadersInDb, sendRequest, saveToCollection, loadRequest,
     deleteHistoryItem, deleteCollectionItem, startEditingCollectionName, cancelEditingCollectionName,
     saveCollectionName,
-    updateCollectionsOrder
+    createCollectionGroup,
+    saveCollectionsLayout
   } = useRequestData();
 
   const [historyFilter, setHistoryFilter] = useState<string>('');
@@ -93,7 +95,7 @@ function App() {
 
   const filteredCollections = collections.filter(item =>
     (item.name && item.name.toLowerCase().includes(collectionFilter.toLowerCase())) ||
-    item.url.toLowerCase().includes(collectionFilter.toLowerCase())
+    (item.url && item.url.toLowerCase().includes(collectionFilter.toLowerCase()))
   );
 
   useEffect(() => {
@@ -153,7 +155,8 @@ function App() {
               startEditingCollectionName={startEditingCollectionName}
               deleteCollectionItem={deleteCollectionItem}
               getMethodColor={getMethodColor}
-              updateCollectionsOrder={updateCollectionsOrder}
+              createCollectionGroup={createCollectionGroup}
+              saveCollectionsLayout={saveCollectionsLayout}
             />
           </div>
         </div>
